@@ -16,7 +16,7 @@ paths:
   /documents:
     post:
       summary: Upload documents
-      description: Upload one or more documents to the server.
+      description: Upload files to be used in jobs. Supports PNG, JPEG, TIFF, and PDF.
       requestBody:
         required: true
         content:
@@ -38,10 +38,12 @@ paths:
                 type: object
                 properties:
                   uploadedKeys:
+                    description: An array of string representing Egress's internal Id for each of the files uploaded.
                     type: array
                     items:
                       type: string
                   uploadedKeysMap:
+                    description: A JSON object that maps submitted file names to Egress's internal Id for each file.
                     type: object
         '401':
           description: Unauthorized
