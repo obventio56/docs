@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Express API
+  title: Egress API
   version: 1.0.0
 servers:
   - url: https://api.tryegress.com
