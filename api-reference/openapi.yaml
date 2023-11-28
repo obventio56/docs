@@ -41,6 +41,8 @@ paths:
                     type: array
                     items:
                       type: string
+                  uploadedKeysMap:
+                    type: object
         '401':
           description: Unauthorized
           content:
