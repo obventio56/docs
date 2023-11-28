@@ -2,6 +2,7 @@ openapi: 3.0.0
 info:
   title: Egress API
   version: 1.0.0
+  description: Official reference for the [Egress](https://tryegress.com/) extract API. To get started, read the [quickstart guide](https://orange-porter-b32.notion.site/Quickstart-Egress-API-9da803c8b2b741be8490c9ba983f37fe).
 servers:
   - url: https://api.tryegress.com
 components:
