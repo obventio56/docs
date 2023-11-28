@@ -26,6 +26,7 @@ paths:
               properties:
                 documents:
                   type: array
+                  description: The files being uploaded
                   items:
                     type: string
                     format: binary
@@ -38,13 +39,15 @@ paths:
                 type: object
                 properties:
                   uploadedKeys:
-                    description: An array of string representing Egress's internal Id for each of the files uploaded.
                     type: array
+                    description: An array of string representing Egress's internal Id for each of the files uploaded.
+                    example: ["1c5950b8-085b-48e3-885d-1c109cc036a8.pdf"]
                     items:
                       type: string
                   uploadedKeysMap:
                     description: A JSON object that maps submitted file names to Egress's internal Id for each file.
                     type: object
+                    example: {"alex_resume": "1c5950b8-085b-48e3-885d-1c109cc036a8.pdf"}
         '401':
           description: Unauthorized
           content:
@@ -65,8 +68,8 @@ paths:
                     type: string
   /job:
     post:
-      summary: Create a job
-      description: Create a new job with shape and fileIds.
+      summary: Kick-off an extraction job
+      description: Apply an extraction as specified in "shape" to the files specified in "fileIds." This is a long-running process and does not directly return results. To view results use the /jobStatus endpoint.  
       requestBody:
         required: true
         content:
@@ -76,8 +79,12 @@ paths:
               properties:
                 shape:
                   type: object
+                  description: A JSON object defining the shape of the data to be extract from each file in this job. Egress uses the standard [JSON schema spec](https://json-schema.org/understanding-json-schema)
+                  example: {"name": {"type": "string", "description": "The name of the person this resume belongs to" }}
                 fileIds:
                   type: array
+                  description: An array of strings representing Egress's internal Ids for the files to be included in this job. 
+                  example: ["9fc177b2-37e4-4011-8b1f-51a52ddecec2.pdf"]
                   items:
                     type: string
       responses:
@@ -90,8 +97,10 @@ paths:
                 properties:
                   jobId:
                     type: string
+                    description: Egress's internal Id referencing the job. Use this value to check job status.
                 example:
-                  jobId: abc123
+                
+                  jobId: "222a7413-8c79-4963-a911-3959276cac7a"
         '401':
           description: Unauthorized
           content:
@@ -114,11 +123,13 @@ paths:
   /jobStatus:
     get:
       summary: Get job status
-      description: Get the status of a specific job.
+      description: Poll the status of a job. When the job is complete, the resposne will include all results. 
       parameters:
         - name: jobId
           in: query
+          description: Egress's internal Id for the job as returned from /job
           required: true
+          example: 222a8413-8c79-4963-a911-3959276cac7a
           schema:
             type: string
       responses:
@@ -136,7 +147,7 @@ paths:
                 example:
                   status: READY
                   results:
-                    extractionResults: { ... }
+                    extractionResults: {"9fc177b2-37e4-4011-8b1f-51a52ddecec2.pdf": {"name": "Alex Pedersen"}}
         '401':
           description: Unauthorized
           content:
